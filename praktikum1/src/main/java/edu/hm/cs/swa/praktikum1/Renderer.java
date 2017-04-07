@@ -32,7 +32,7 @@ public class Renderer {
      */
     public String render() {
         String fields = renderFields();
-        System.out.println(fields);
+        //System.out.println(fields);
         return fields;
     }
 
@@ -43,7 +43,8 @@ public class Renderer {
     private String renderFields() {
         String tmp = "";
         try {
-            Class< ? > cut = Class.forName("edu.hm.cs.swa.praktikum1.SomeClass");
+            //Class< ? > cut = Class.forName("edu.hm.cs.swa.praktikum1.SomeClass");
+            Class < ? > cut = obj.getClass();
             tmp += "Instance of " + cut.getName() + ":\n";
             Field[] fields = cut.getDeclaredFields();
             for (Field f : fields) {

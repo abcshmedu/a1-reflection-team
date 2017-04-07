@@ -8,7 +8,6 @@ import java.util.Collection;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
@@ -19,34 +18,39 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class RendererTest {
 
-    //private SomeClass toRender;
     private Renderer renderer;
-    public static final int TESTINT = 5; 
+    public static final int[] TESTINTS = {5, 6, 7}; 
+    private Object toTest;
+    private String expected;
     
     /**
      * Creates a collection with test objects.
      * @return a collection with test objects
      */
     @Parameters
-    public static Collection<Object[]> test() {
+    public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            {new SomeClass(TESTINT), "foo (Type int): 5\narray (Type int[]): [1, 2, 3, ]\ndate (Type java.util.Date): Fri Jan 02 11:17:36 CET 1970\n"},
-            {},
+            {new SomeClass(TESTINTS[0]), "Instance of edu.hm.cs.swa.praktikum1.SomeClass:\n" + "foo (Type int): 5\narray (Type int[]) [1, 2, 3, ]\ndate (Type java.util.Date): Fri Jan 02 11:17:36 CET 1970\n"}, 
+            {new SomeClass(TESTINTS[1]), "Instance of edu.hm.cs.swa.praktikum1.SomeClass:\n" + "foo (Type int): 6\narray (Type int[]) [1, 2, 3, ]\ndate (Type java.util.Date): Fri Jan 02 11:17:36 CET 1970\n"},
+            {new SomeClass(TESTINTS[2]), "Instance of edu.hm.cs.swa.praktikum1.SomeClass:\n" + "foo (Type int): 7\narray (Type int[]) [1, 2, 3, ]\ndate (Type java.util.Date): Fri Jan 02 11:17:36 CET 1970\n"}
            });
     }
     
-    @Parameter
-    private Object toTest;
-    
-    @Parameter(1)
-    private String expected;
+    /**
+     * Constructs a Testobject.
+     * @param toTest object for the render method
+     * @param expected return string from the render method
+     */    
+    public RendererTest(Object toTest, String expected) {
+        this.toTest = toTest;
+        this.expected = expected;
+    }
     
     /**
      * Creates a renderer object for the test.
-     */
+     */ 
     @Before
     public void setUp() {
-        //toRender = new SomeClass(5);
         renderer = new Renderer(toTest);
     }
     
