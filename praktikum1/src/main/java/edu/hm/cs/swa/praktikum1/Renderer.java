@@ -33,7 +33,47 @@ public class Renderer {
     public String render() {
         String fields = renderFields();
         //System.out.println(fields);
+        System.out.println(renderMethods());
         return fields;
+    }
+    /**
+     *  . 
+     * @return String representation of Methods
+     */
+    private String renderMethods() {
+        String tmp = "";
+        try {
+            Class < ? > cut = obj.getClass();
+            Method[] methods = cut.getDeclaredMethods();
+            for (Method m: methods) {
+                Annotation[] annos = m.getAnnotations();
+                for (Annotation anno:annos) {
+                    if (anno instanceof RenderMe) {
+                        RenderMe myAnno = (RenderMe) anno;
+                        String withParam = myAnno.with();
+                        if (!withParam.equals("")) {
+                            Class < ? > objClass = Class.forName(withParam);
+                            Method renderMethod = objClass.getMethod("render", m.getReturnType());                      
+                            tmp += renderMethod.invoke(objClass.newInstance(), m.invoke(obj));
+                        } else {
+                            Parameter[] array = m.getParameters();
+                            String helper = "";
+                            for (Parameter p: array) {
+                                //helper += p.getName();
+                                helper += p.getType().getSimpleName() + ", ";
+                            }
+                            helper = helper.substring(0, helper.length() - 2);
+                            tmp += m.getReturnType().getSimpleName() + " " + m.getName() + "(" + helper + ")\n"; 
+                        }
+                    }
+                }
+            }
+            return tmp;
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            return tmp;
+        }
     }
 
     /**
@@ -51,12 +91,13 @@ public class Renderer {
                 Annotation[] annos = f.getAnnotations();
                 for (Annotation anno : annos) {
                     if (anno instanceof RenderMe) {
+                        f.setAccessible(true);
                         RenderMe myAnno = (RenderMe) anno;
                         String withParam = myAnno.with();
                         if (!withParam.equals("")) {
                             Class < ? > objClass = Class.forName(withParam);
-                            CustomRenderInterface cri = (CustomRenderInterface)objClass.newInstance();
-                            tmp += f.getName() + " (Type " + f.getType().getSimpleName() + ") " + cri.render(f.get(obj));
+                            Method m = objClass.getMethod("render", f.getType());                           
+                            tmp += f.getName() + " (Type " + f.getType().getSimpleName() + ") " +  m.invoke(objClass.newInstance(), f.get(obj));
                         } else {
                             tmp += f.getName() + " (Type " + f.getType().getName() + "): " + f.get(obj) + "\n"; 
                         }

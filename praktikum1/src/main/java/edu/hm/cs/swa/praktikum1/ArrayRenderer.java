@@ -1,13 +1,12 @@
 package edu.hm.cs.swa.praktikum1;
 
-import java.lang.reflect.Array;
 
 /**
  * Renderer for arrays.
  * @author Altvatter Robert, Groﬂbeck Thomas
  *
  */
-public class ArrayRenderer implements CustomRenderInterface {
+public class ArrayRenderer {
     /**
      * DefaultConstructor.
      */
@@ -15,19 +14,16 @@ public class ArrayRenderer implements CustomRenderInterface {
    
     /**
      * Returns a string with the presentation of the attributes of the object.
-     * @param o object to render.
+     * @param array to render.
      * @return a string with the presentation of the attributes
      */
-    public String render(Object o) {
-        int length = Array.getLength(o);
-        String ret = "";
-        if (length != 0) {
-            ret += "[";
+    public String render(int[] array) {
+        String ret = "[";
+        for (int elem:array) {
+            ret += elem + ", ";
         }
-        for (int i = 0; i < length; i++) {
-            ret += Array.get(o, i) + ", ";
-        }
-        return ret + "]\n";
+        ret += "]\n";
+        return ret;     
     }
 
 }
