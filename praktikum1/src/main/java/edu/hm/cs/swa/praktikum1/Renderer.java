@@ -9,22 +9,13 @@ import java.lang.reflect.*;
  */
 public class Renderer {
     private final Object obj;
-    public static final int TESTINT = 5;
-    /**
-     * Main.
-     * @param args parameter
-     */
-    public static void main(String[] args) {
-        Renderer r = new Renderer(new SomeClass(TESTINT));
-        r.render();
-        
-    }
+
     /**
      * Constructor for a Renderer Object.
-     * @param o object to render
+     * @param obj object to render
      */
-    public Renderer(Object o) {
-        obj = o;
+    public Renderer(Object obj) {
+        this.obj = obj;
     }
     /**
      * Returns a string with the presentation of the attributes of the object.
@@ -37,7 +28,7 @@ public class Renderer {
         return fields;
     }
     /**
-     *  . 
+     * Creates a String representation of the Methods.
      * @return String representation of Methods
      */
     private String renderMethods() {
@@ -59,7 +50,6 @@ public class Renderer {
                             Parameter[] array = m.getParameters();
                             String helper = "";
                             for (Parameter p: array) {
-                                //helper += p.getName();
                                 helper += p.getType().getSimpleName() + ", ";
                             }
                             helper = helper.substring(0, helper.length() - 2);
@@ -83,7 +73,6 @@ public class Renderer {
     private String renderFields() {
         String tmp = "";
         try {
-            //Class< ? > cut = Class.forName("edu.hm.cs.swa.praktikum1.SomeClass");
             Class < ? > cut = obj.getClass();
             tmp += "Instance of " + cut.getName() + ":\n";
             Field[] fields = cut.getDeclaredFields();
